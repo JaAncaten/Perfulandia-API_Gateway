@@ -6,9 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import reactor.test.StepVerifier;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -27,11 +26,13 @@ class GatewayConfigTest {
         .assertNext(rutas -> {
             assertTrue(rutas.contains("soporte-service"));
             assertTrue(rutas.contains("pedido-service"));
-
-            // Ajusta estos nombres según los IDs reales que pusiste en GatewayConfig.java
             assertTrue(rutas.contains("tiendas-service"));
             assertTrue(rutas.contains("inventario-catalogo-service"));
             assertTrue(rutas.contains("resena-service"));
+            assertTrue(rutas.contains("autenticacion-service"));
+            assertTrue(rutas.contains("carrito-service"));
+            assertTrue(rutas.contains("ventas-facturacion-service"));
+            assertTrue(rutas.contains("usuario-service"));
         })
         .verifyComplete();
     }
@@ -44,37 +45,54 @@ class GatewayConfigTest {
                         .collectList()
         )
         .assertNext(rutas -> {
-            assertEquals(5, rutas.size());
+            assertEquals(9, rutas.size());
         })
         .verifyComplete();
     }
 
     @Test
     void deberiaCargarRutaSoporteService() {
-        StepVerifier.create(
-                routeLocator.getRoutes()
-                        .filter(route -> route.getId().equals("soporte-service"))
-                        .collectList()
-        )
-        .assertNext(rutas -> {
-            assertEquals(1, rutas.size());
-            assertEquals("soporte-service", rutas.get(0).getId());
-        })
-        .verifyComplete();
+        verificarRutaExiste("soporte-service");
     }
 
     @Test
     void deberiaCargarRutaPedidoService() {
-        StepVerifier.create(
-                routeLocator.getRoutes()
-                        .filter(route -> route.getId().equals("pedido-service"))
-                        .collectList()
-        )
-        .assertNext(rutas -> {
-            assertEquals(1, rutas.size());
-            assertEquals("pedido-service", rutas.get(0).getId());
-        })
-        .verifyComplete();
+        verificarRutaExiste("pedido-service");
+    }
+
+    @Test
+    void deberiaCargarRutaTiendasService() {
+        verificarRutaExiste("tiendas-service");
+    }
+
+    @Test
+    void deberiaCargarRutaInventarioCatalogoService() {
+        verificarRutaExiste("inventario-catalogo-service");
+    }
+
+    @Test
+    void deberiaCargarRutaResenaService() {
+        verificarRutaExiste("resena-service");
+    }
+
+    @Test
+    void deberiaCargarRutaAutenticacionService() {
+        verificarRutaExiste("autenticacion-service");
+    }
+
+    @Test
+    void deberiaCargarRutaCarritoService() {
+        verificarRutaExiste("carrito-service");
+    }
+
+    @Test
+    void deberiaCargarRutaVentasFacturacionService() {
+        verificarRutaExiste("ventas-facturacion-service");
+    }
+
+    @Test
+    void deberiaCargarRutaUsuarioService() {
+        verificarRutaExiste("usuario-service");
     }
 
     @Test
@@ -85,7 +103,20 @@ class GatewayConfigTest {
                         .collectList()
         )
         .assertNext(rutas -> {
-            assertTrue(!rutas.contains("servicio-inexistente"));
+            assertFalse(rutas.contains("servicio-inexistente"));
+        })
+        .verifyComplete();
+    }
+
+    private void verificarRutaExiste(String idRuta) {
+        StepVerifier.create(
+                routeLocator.getRoutes()
+                        .filter(route -> route.getId().equals(idRuta))
+                        .collectList()
+        )
+        .assertNext(rutas -> {
+            assertEquals(1, rutas.size());
+            assertEquals(idRuta, rutas.get(0).getId());
         })
         .verifyComplete();
     }

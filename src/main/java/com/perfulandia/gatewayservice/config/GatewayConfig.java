@@ -46,6 +46,33 @@ public class GatewayConfig {
                         .path("/api/v1/resenas", "/api/v1/resenas/**")
                         .uri("http://localhost:8093"))
 
+
+                // AUTENTICACION SERVICE
+                .route("autenticacion-service", r -> r
+                        .path("/api/auth", "/api/auth/**")
+                        .uri("http://localhost:8081"))
+
+
+                // CARRITO SERVICE
+                .route("carrito-service", r -> r
+                        .path("/api/v1/carrito", "/api/v1/carrito/**")
+                        .uri("http://localhost:8094"))
+
+                // VENTAS Y FACTURACION SERVICE
+                .route("ventas-facturacion-service", r -> r
+                        .path("/api/v1/ventas-facturacion", "/api/v1/ventas-facturacion/**")
+                        .uri("http://localhost:8095"))
+
+                // USUARIO SERVICE
+                .route("usuario-service", r -> r
+                        .path(
+                                "/api/usuarios", "/api/usuarios/**",
+                                "/api/roles", "/api/roles/**",
+                                "/api/permisos", "/api/permisos/**"
+                        )
+                        .uri("http://localhost:8082"))
+
+
                 .build();
     }
 }
